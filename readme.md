@@ -42,6 +42,9 @@ spark-submit \
   --deploy-mode client \
   /app/test.py
 
+
+
+<!-- 2 way -->
 docker-compose up --build
 docker-compose down
 
@@ -49,13 +52,23 @@ docker-compose down
   http://localhost:8080
 
 
-  docker exec -it spark-master /opt/bitnami/spark/bin/spark-submit \
+  <!-- docker exec -it spark-master /opt/bitnami/spark/bin/spark-submit \
   --master spark://spark-master:7077 \
   --deploy-mode client \
-  /opt/bitnami/spark/test.py
+  /opt/bitnami/spark/test.py -->
 
 
 spark-submit \
   --master spark://spark-master:7077 \
   --deploy-mode client \
-  /opt/bitnami/spark/bin/spark-submit
+  /opt/bitnami/spark/test.py
+
+spark-submit \
+  --master spark://spark-master:7077 \
+  --deploy-mode cluster \
+  /opt/bitnami/spark/test.py
+
+spark-submit --master local[*] /opt/bitnami/spark/test.py
+
+
+docker-compose down --volumes --rmi all
