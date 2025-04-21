@@ -44,10 +44,13 @@ spark-submit \
 
 
 
-<!-- 2 way -->
+<!-- 2 way use -- build to rebuild  -d deatched mode -->
 docker-compose up --build
-docker-compose down
+docker-compose down --volumes --rmi all
 
+<!-- clean up docker cache -->
+docker builder prune --all
+docker system prune -a --volumesdocker-compose down -v
 
   http://localhost:8080
 
@@ -61,14 +64,38 @@ docker-compose down
 spark-submit \
   --master spark://spark-master:7077 \
   --deploy-mode client \
-  /opt/bitnami/spark/test.py
+  /opt/bitnami/spark/app/test.py
 
 spark-submit \
   --master spark://spark-master:7077 \
   --deploy-mode cluster \
-  /opt/bitnami/spark/test.py
+  /opt/bitnami/spark/app/test.py
+<!-- local -->
+spark-submit --master local[*] /opt/bitnami/spark/app/test.py
+<!-- use .sh to do submit spark client mode-->
+/opt/bitnami/spark/app/submit_spark_job1.sh
 
-spark-submit --master local[*] /opt/bitnami/spark/test.py
 
 
-docker-compose down --volumes --rmi all
+spark-submit \
+  --master yarn \
+  --deploy-mode cluster \
+  /opt/bitnami/spark/app/test.py
+
+
+<!-- copy local to container -->
+docker cp ./ spark-master:/opt/bitnami/spark/
+
+
+
+python -m venv .venv
+source .venv/Scripts/activate
+
+
+git rm -r --cached .
+
+<!-- local conect to remote spark -->
+python app/test2.py
+
+spark-submit --master spark://localhost:7077 \
+python app/test2.py

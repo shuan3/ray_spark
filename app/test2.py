@@ -3,7 +3,10 @@ from datetime import datetime, date
 from pyspark.sql import Row,SparkSession
 
 
-spark = SparkSession.builder.getOrCreate()
+spark = SparkSession.builder \
+    .appName("LocalToDockerSpark") \
+    .master("http://localhost:7077/") \
+    .getOrCreate()
 
 df = spark.createDataFrame([
     Row(a=1, b=2., c='string1', d=date(2000, 1, 1), e=datetime(2000, 1, 1, 12, 0)),
